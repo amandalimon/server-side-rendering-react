@@ -18,7 +18,7 @@ return (
 
 <body>
   <div id="app">${html}</div>
-  <script>window.__INITIAL_PROPS__=${JSON.stringify(initialProps)}</script>
+  <script>window.__INITIAL_PROPS__= ${JSON.stringify(initialProps)}</script>
   <script src="app.js" type="text/javascript"></script>
 </body>
 
