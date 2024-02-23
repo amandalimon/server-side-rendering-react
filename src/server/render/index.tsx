@@ -3,15 +3,27 @@ import { App } from "../../app/containers/App";
 import { StaticRouter } from 'react-router-dom/server';
 import { renderToString } from 'react-dom/server';
 import { template } from "./template";
+import { ServerStyleSheet } from 'styled-components';
 
-export const render = (url: string, initialProps={}) => {
-    const stream = renderToString(
-        <StaticRouter location={url}>
-            <App />
-        </StaticRouter>
-    )
 
-    const html = template(stream, initialProps)
+export const render = (url: string, initialProps = {}) => {
+    const sheet = new ServerStyleSheet();
 
-    return html
+    try {
+        const stream = renderToString(
+            sheet.collectStyles(
+                <StaticRouter location={url}>
+                    <App />
+                </StaticRouter>
+            )
+        )
+        const styleTags = sheet.getStyleTags()
+        const html = template(stream, initialProps, styleTags)
+
+        return html
+    } catch {
+        console.error(Error)
+    } finally {
+        sheet.seal();
+    }
 }
